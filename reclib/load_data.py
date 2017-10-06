@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Fri Oct  6 16:14:03 2017
+# Last Modified: Fri Oct  6 18:20:31 2017
 
 import pkg_resources
 
@@ -12,6 +12,8 @@ def load_data(filename):
     X = []
     with open(filename) as f:
         for line in f:
+            # TODO: what if the separator is not space-like symbols?
+            # fix the issue
             user, item, rating = line.strip().split()
             X.append((int(user), int(item), float(rating)))
     return X
