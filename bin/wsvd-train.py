@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 17:41:55 2017
+# Last Modified: Fri Oct  6 18:06:59 2017
 
 import os
 import sys
@@ -32,7 +32,7 @@ def main(argv):
 
     X = reclib.load_data.load_data(argv[1])
     n_users, n_items = reclib.utils.get_num_users_items(X)
-    rec = reclib.WSVD(n_users=n_users, n_items=n_items, n_epochs=3)
+    rec = reclib.WSVD(n_users=n_users, n_items=n_items, n_epochs=30)
     rec.train(X)
 
     dump_filename = os.path.splitext(os.path.basename(argv[1]))[0] + '-model.pck'
