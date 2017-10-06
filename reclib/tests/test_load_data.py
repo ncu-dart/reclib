@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 16:35:28 2017
+# Last Modified: Fri Oct  6 18:13:43 2017
 
 from unittest import TestCase
 
@@ -17,4 +17,9 @@ class TestLoadData(TestCase):
         self.assertTrue(len(X[0]), 3)
         self.assertTrue(len(X) == 35497)
 
-    # TODO: test other functions and modules
+    def test_load_movielens_100k(self):
+        X = reclib.load_data.load_movielens_100k()
+        self.assertTrue(isinstance(X, list))
+        self.assertTrue(isinstance(X[0], tuple))
+        self.assertTrue(len(X[0]), 3)
+        self.assertTrue(len(X) == 100000)
