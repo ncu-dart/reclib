@@ -1,6 +1,7 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Fri Oct  6 16:09:58 2017
+# Last Modified: Fri Oct  6 16:14:03 2017
+
 import pkg_resources
 
 resource_package = __name__

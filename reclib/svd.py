@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Fri Oct  6 14:59:40 2017
+# Last Modified: Fri Oct  6 16:20:55 2017
 
 import numpy as np
 
@@ -61,15 +61,6 @@ class SVD(RecBase):
             else:
                 loss, rmse = self._compute_err(validate_ratings)
                 print("After %i epochs, loss=%.6f, validating rmse=%.6f" % (epoch+1, loss, rmse))
-
-    def predict(self, test_ratings):
-        all_predicts = []
-        for (ext_user_id, ext_item_id, r) in test_ratings:
-            r = float(r)
-            u = self.eu2iu[ext_user_id] if ext_user_id in self.eu2iu else -1
-            i = self.ei2ii[ext_item_id] if ext_item_id in self.ei2ii else -1
-            all_predicts.append((ext_user_id, ext_item_id, self.predict_single_rating(u, i)))
-        return all_predicts
 
     def predict_single_rating(self, u, i):
         bu = self.bu[u] if u >= 0 else 0
