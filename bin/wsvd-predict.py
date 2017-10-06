@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 17:55:08 2017
+# Last Modified: Fri Oct  6 18:27:33 2017
 
 import os
 import sys
@@ -44,11 +44,13 @@ def main(argv):
         wsvd = pickle.load(f_in)
 
     X_test = reclib.load_data.load_data(argv[1])
-    loss, rmse = wsvd.compute_err(X_test)
-    # TODO: compute other regression performance measures
+    X_test_hat = wsvd.predict(X_test)
+    rmse = reclib.performance.rmse(X_test, X_test_hat)
+    r2_score = reclib.performance.r2_score(X_test, X_test_hat)
 
     with open(argv[3], 'w') as f_out:
         output(f_out, "RMSE: %f" % (rmse))
+        output(f_out, "R^2: %f" % (r2_score))
 
 
 if __name__ == "__main__":
