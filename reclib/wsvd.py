@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Fri Oct  6 17:47:51 2017
+# Last Modified: Fri Oct  6 18:26:13 2017
 
 import numpy as np
 
@@ -62,10 +62,10 @@ class WSVD(RecBase):
                 self.P[u,:] -= (self.lr_latent * epoch_shrink) * (-err * np.multiply(w, qi) + self.lmbda_latent * pu)
                 self.Q[i,:] -= (self.lr_latent * epoch_shrink) * (-err * np.multiply(w, pu) + self.lmbda_latent * qi)
             if validate_ratings is None:
-                loss, rmse = self.compute_err(ratings)
+                loss, rmse = self._compute_err(ratings)
                 print("After %i epochs, loss=%.6f, training rmse=%.6f" % (epoch+1, loss, rmse))
             else:
-                loss, rmse = self.compute_err(validate_ratings)
+                loss, rmse = self._compute_err(validate_ratings)
                 print("After %i epochs, loss=%.6f, validating rmse=%.6f" % (epoch+1, loss, rmse))
 
     def predict_single_rating(self, u, i):
@@ -75,7 +75,7 @@ class WSVD(RecBase):
         qi = self.Q[i,:] if i >= 0 else np.zeros(self.n_factors)
         return self.global_mean + bu + bi + np.dot(np.multiply(self.w, pu), qi)
 
-    def compute_err(self, ratings):
+    def _compute_err(self, ratings):
         loss = 0.
         sse = 0.
 
