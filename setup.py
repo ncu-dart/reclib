@@ -27,4 +27,5 @@ setup(name='reclib',
       zip_safe=False,
       test_suite='nose.collector',
       tests_require=['nose'],
+      scripts=['bin/wsvd-train.py'],
 )
