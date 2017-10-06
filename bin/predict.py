@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 18:42:56 2017
+# Last Modified: Fri Oct  6 18:45:36 2017
 
 import os
 import sys
@@ -41,10 +41,10 @@ def main(argv):
     check_args(argv)
 
     with open(argv[2], 'rb') as f_in:
-        wsvd = pickle.load(f_in)
+        model = pickle.load(f_in)
 
     X_test = reclib.load_data.load_data(argv[1])
-    X_test_hat = wsvd.predict(X_test)
+    X_test_hat = model.predict(X_test)
     rmse = reclib.metrics.rmse(X_test, X_test_hat)
     r2_score = reclib.metrics.r2_score(X_test, X_test_hat)
 

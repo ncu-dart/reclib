@@ -29,6 +29,7 @@ setup(name='reclib',
       tests_require=['nose'],
       scripts=[
             'bin/wsvd-train.py',
-            'bin/wsvd-predict.py',
+            'bin/svd-train.py',
+            'bin/predict.py',
       ],
 )
