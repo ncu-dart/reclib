@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 18:41:12 2017
+# Last Modified: Fri Oct  6 18:42:56 2017
 
 import os
 import sys
@@ -45,8 +45,8 @@ def main(argv):
 
     X_test = reclib.load_data.load_data(argv[1])
     X_test_hat = wsvd.predict(X_test)
-    rmse = reclib.performance.rmse(X_test, X_test_hat)
-    r2_score = reclib.performance.r2_score(X_test, X_test_hat)
+    rmse = reclib.metrics.rmse(X_test, X_test_hat)
+    r2_score = reclib.metrics.r2_score(X_test, X_test_hat)
 
     with open(argv[3], 'w') as f_out:
         output(f_out, "RMSE: %f" % (rmse))
