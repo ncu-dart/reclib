@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 18:27:33 2017
+# Last Modified: Fri Oct  6 18:41:12 2017
 
 import os
 import sys
@@ -50,7 +50,7 @@ def main(argv):
 
     with open(argv[3], 'w') as f_out:
         output(f_out, "RMSE: %f" % (rmse))
-        output(f_out, "R^2: %f" % (r2_score))
+        output(f_out, "R^2 score: %f" % (r2_score))
 
 
 if __name__ == "__main__":
