@@ -3,7 +3,7 @@
 
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 17:39:03 2017
+# Last Modified: Fri Oct  6 17:41:55 2017
 
 import os
 import sys
@@ -12,7 +12,7 @@ import pickle
 import reclib
 
 def usage(cmd):
-    print('Usage: %s [user-item-rating-file]' % (cmd))
+    print('Usage: %s [train-file]' % (cmd))
     return
 
 
