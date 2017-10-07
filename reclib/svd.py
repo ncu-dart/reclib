@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Fri Oct  6 18:26:06 2017
+# Last Modified: Sat Oct  7 08:11:57 2017
 
 import numpy as np
 
@@ -43,10 +43,10 @@ class SVD(RecBase):
         for epoch in range(self.n_epochs):
             epoch_shrink = self.lr_shrink_rate ** epoch
             for (ext_user_id, ext_item_id, r) in ratings:
+                err = r - self.predict_single_rating(ext_user_id, ext_item_id)
                 u = self.eu2iu[ext_user_id]
                 i = self.ei2ii[ext_item_id]
                 r = float(r)
-                err = r - self.predict_single_rating(u, i)
                 bu = self.bu[u]
                 bi = self.bi[i]
                 pu = self.P[u,:]
@@ -62,22 +62,33 @@ class SVD(RecBase):
                 loss, rmse = self._compute_err(validate_ratings)
                 print("After %i epochs, loss=%.6f, validating rmse=%.6f" % (epoch+1, loss, rmse))
 
-    def predict_single_rating(self, u, i):
+    def predict_single_rating(self, ext_user_id, ext_item_id):
+        u = self.eu2iu[ext_user_id] if ext_user_id in self.eu2iu else -1
+        i = self.ei2ii[ext_item_id] if ext_item_id in self.ei2ii else -1
         bu = self.bu[u] if u >= 0 else 0
         bi = self.bi[i] if i >= 0 else 0
         pu = self.P[u,:] if u >= 0 else np.zeros(self.n_factors)
         qi = self.Q[i,:] if i >= 0 else np.zeros(self.n_factors)
         return self.global_mean + bu + bi + np.dot(pu, qi)
+    
+    def predict(self, user_item_pairs):
+        return super().predict(user_item_pairs)
+
+    def _external_internal_id_mapping(self, ratings):
+        return super()._external_internal_id_mapping(ratings)
+
+    def _compute_global_mean(self, ratings):
+        return super()._compute_global_mean(ratings)
 
     def _compute_err(self, ratings):
         loss = 0.
         sse = 0.
 
         for (ext_user_id, ext_item_id, r) in ratings:
-            u = self.eu2iu[ext_user_id] if ext_user_id in self.eu2iu else -1
-            i = self.ei2ii[ext_item_id] if ext_item_id in self.ei2ii else -1
+            #u = self.eu2iu[ext_user_id] if ext_user_id in self.eu2iu else -1
+            #i = self.ei2ii[ext_item_id] if ext_item_id in self.ei2ii else -1
             r = float(r)
-            err_square = (r - self.predict_single_rating(u, i)) ** 2
+            err_square = (r - self.predict_single_rating(ext_user_id, ext_item_id)) ** 2
             sse += err_square
             loss += err_square
         loss += self.lmbda_latent * (np.linalg.norm(self.P) + np.linalg.norm(self.Q)) + \

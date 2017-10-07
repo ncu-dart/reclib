@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen@g.ncu.edu.tw>
 # Creation Date : 10-06-2017
-# Last Modified: Fri Oct  6 18:25:28 2017
+# Last Modified: Sat Oct  7 08:11:14 2017
 
 class RecBase:
     def __init__(self):
@@ -9,9 +9,7 @@ class RecBase:
     def predict(self, user_item_pairs):
         all_predicts = []
         for (ext_user_id, ext_item_id, r) in user_item_pairs:
-            u = self.eu2iu[ext_user_id] if ext_user_id in self.eu2iu else -1
-            i = self.ei2ii[ext_item_id] if ext_item_id in self.ei2ii else -1
-            all_predicts.append((ext_user_id, ext_item_id, self.predict_single_rating(u, i)))
+            all_predicts.append((ext_user_id, ext_item_id, self.predict_single_rating(ext_user_id, ext_item_id)))
         return all_predicts
 
     def _external_internal_id_mapping(self, ratings):
