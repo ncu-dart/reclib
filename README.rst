@@ -1,6 +1,10 @@
+======
 reclib
---------
-Sample usage (with caution)::
+======
+
+****************************
+Sample usage (with caution):
+****************************
 
 >>> import reclib
 >>> X = reclib.load_data.load_filmtrust()
@@ -13,26 +17,33 @@ Sample usage (with caution)::
 >>> rec2 = reclib.SVD(n_users=n_users, n_items=n_items)  # use the SVD model
 >>> rec2.train(X)
 
-How to compile::
+***************
+How to install:
+***************
 
-    python setup.py install
+    ``python setup.py install``
 
-Command line tools::
+*******************
+Command line tools:
+*******************
 
-1. Generating the training model
+To generate the WSVD model, run::
+=================================
 
-To run the Weighted-SVD model::
+    ``wsvd-train.py [train-file]``
 
-    wsvd-train.py [train-file]
+This will generate a model file of the name ``[train-file]-wsvd-model.pck``
 
-To run the SVD model::
+To generate the SVD model, run::
+================================
 
-    svd-train.py [train-file]
+    ``svd-train.py [train-file]``
 
-This will generate a model file of the name `[train-file]-wsvd-model.pck`
+This will generate a model file of the name ``[train-file]-svd-model.pck``
 
-2. Test the model by::
+Test the model by::
+===================
 
-    rec-predict.py [test-file] [model-file] [output-file]
+    ``rec-predict.py [test-file] [model-file] [output-file]``
 
-This will show the RMSE scores on the screen and also saved in the `[output-file]`.
+This will show the RMSE scores on the screen and also saved in the ``[output-file]``.
