@@ -13,7 +13,11 @@ Sample usage (with caution)::
 >>> rec2 = reclib.SVD(n_users=n_users, n_items=n_items)  # use the SVD model
 >>> rec2.train(X)
 
-Command line tools
+How to compile::
+
+    python setup.py install
+
+Command line tools::
 
 1. Generating the training model:
   (1) Weighted-SVD model:
