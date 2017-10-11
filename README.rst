@@ -21,29 +21,29 @@ Sample usage (with caution):
 How to install:
 ***************
 
-    ``python setup.py install``
+``python setup.py install``
 
 *******************
 Command line tools:
 *******************
 
-To generate the WSVD model, run::
+To generate the WSVD model, run:
 =================================
 
-    ``wsvd-train.py [train-file]``
+``wsvd-train.py [train-file]``
 
 This will generate a model file of the name ``[train-file]-wsvd-model.pck``
 
-To generate the SVD model, run::
+To generate the SVD model, run:
 ================================
 
-    ``svd-train.py [train-file]``
+``svd-train.py [train-file]``
 
 This will generate a model file of the name ``[train-file]-svd-model.pck``
 
-Test the model by::
+Test the model by:
 ===================
 
-    ``rec-predict.py [test-file] [model-file] [output-file]``
+``rec-predict.py [test-file] [model-file] [output-file]``
 
 This will show the RMSE scores on the screen and also saved in the ``[output-file]``.
