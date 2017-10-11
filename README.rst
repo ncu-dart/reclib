@@ -19,18 +19,18 @@ How to compile::
 
 Command line tools::
 
-1. Generating the training model:
-  (1) Weighted-SVD model:
+1. Generating the training model::
+(1) To run the Weighted-SVD model::
 
     wsvd-train.py [train-file]
 
-  (2) SVD model:
+(2) To run the SVD model::
 
     svd-train.py [train-file]
 
 This will generate a model file of the name `[train-file]-wsvd-model.pck`
 
-2. Test the model by:
+2. Test the model by::
 
     rec-predict.py [test-file] [model-file] [output-file]
 
