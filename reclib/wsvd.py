@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Sat Oct  7 08:12:44 2017
+# Last Modified: Wed Oct 11 14:16:21 2017
 
 import numpy as np
 
@@ -13,7 +13,7 @@ class WSVD(RecBase):
     (http://www.cs.ubbcluj.ro/~gabis/DocDiplome/SistemeDeRecomandare/Recommender_systems_handbook.pdf)
     '''
     def __init__(
-            self, n_users, n_items, n_factors=15, n_epochs=30,
+            self, n_users, n_items, n_factors=15, n_epochs=50,
             lr=.005, lr_bias=None, lr_latent=None, lr_w=None,
             lmbda=.02, lmbda_bias=None, lmbda_latent=None, lmbda_w=None,
             lr_shrink_rate=.9):
