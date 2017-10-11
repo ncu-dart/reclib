@@ -30,6 +30,6 @@ setup(name='reclib',
       scripts=[
             'bin/wsvd-train.py',
             'bin/svd-train.py',
-            'bin/predict.py',
+            'bin/rec-predict.py',
       ],
 )

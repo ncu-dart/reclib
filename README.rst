@@ -28,6 +28,6 @@ This will generate a model file of the name `[train-file]-wsvd-model.pck`
 
 2. Test the model by:
 
-    predict.py [test-file] [model-file] [output-file]
+    rec-predict.py [test-file] [model-file] [output-file]
 
 This will show the RMSE scores on the screen and also saved in the `[output-file]`.
