@@ -20,6 +20,7 @@ How to compile::
 Command line tools::
 
 1. Generating the training model::
+
 (1) To run the Weighted-SVD model::
 
     wsvd-train.py [train-file]
