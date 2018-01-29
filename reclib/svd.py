@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Wed Oct 11 14:16:16 2017
+# Last Modified: Mon 29 Jan 2018 11:35:11 PM CST
 
 import numpy as np
 
@@ -36,7 +36,7 @@ class SVD(RecBase):
         self.bu = np.zeros(self.n_users)
         self.bi = np.zeros(self.n_items)
 
-    def train(self, ratings, validate_ratings=None):
+    def train(self, ratings, validate_ratings=None, show_process_rmse=True):
         self._external_internal_id_mapping(ratings)
         self.global_mean = self._compute_global_mean(ratings)
 
@@ -55,12 +55,13 @@ class SVD(RecBase):
                 self.bi[i] -= (self.lr_bias * epoch_shrink) * (-err + self.lmbda_bias * bi)
                 self.P[u,:] -= (self.lr_latent * epoch_shrink) * (-err * qi + self.lmbda_latent * pu)
                 self.Q[i,:] -= (self.lr_latent * epoch_shrink) * (-err * pu + self.lmbda_latent * qi)
-            if validate_ratings is None:
-                loss, rmse = self._compute_err(ratings)
-                print("After %i epochs, loss=%.6f, training rmse=%.6f" % (epoch+1, loss, rmse))
-            else:
-                loss, rmse = self._compute_err(validate_ratings)
-                print("After %i epochs, loss=%.6f, validating rmse=%.6f" % (epoch+1, loss, rmse))
+            if show_process_rmse:
+                if validate_ratings is None:
+                    loss, rmse = self._compute_err(ratings)
+                    print("After %i epochs, loss=%.6f, training rmse=%.6f" % (epoch+1, loss, rmse))
+                else:
+                    loss, rmse = self._compute_err(validate_ratings)
+                    print("After %i epochs, loss=%.6f, validating rmse=%.6f" % (epoch+1, loss, rmse))
 
     def predict_single_rating(self, ext_user_id, ext_item_id):
         u = self.eu2iu[ext_user_id] if ext_user_id in self.eu2iu else -1
