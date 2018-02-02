@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Mon 29 Jan 2018 11:46:34 PM CST
+# Last Modified: Fri 02 Feb 2018 09:57:37 AM CST
 
 import numpy as np
 
@@ -15,7 +15,7 @@ class WSVD(RecBase):
     def __init__(
             self, n_users, n_items, n_factors=15, n_epochs=50,
             lr=.005, lr_bias=None, lr_latent=None, lr_w=None,
-            lmbda=.02, lmbda_bias=None, lmbda_latent=None, lmbda_w=None,
+            lmbda=.02, lmbda_bias=None, lmbda_p=None, lmbda_q=None, lmbda_w=None,
             lr_shrink_rate=.9):
         self.n_users = n_users
         self.n_items = n_items
@@ -27,7 +27,8 @@ class WSVD(RecBase):
         self.lr_w = lr if lr_w is None else lr_w
         self.lmbda = lmbda
         self.lmbda_bias = lmbda if lmbda_bias is None else lmbda_bias
-        self.lmbda_latent = lmbda if lmbda_latent is None else lmbda_latent
+        self.lmbda_p = lmbda if lmbda_p is None else lmbda_p
+        self.lmbda_q = lmbda if lmbda_q is None else lmbda_q
         self.lmbda_w = lmbda if lmbda_w is None else lmbda_w
         self.lr_shrink_rate = lr_shrink_rate
         self.eu2iu = {} # external-user to internal-user id
@@ -59,8 +60,8 @@ class WSVD(RecBase):
                 self.bu[u] -= (self.lr_bias * epoch_shrink) * (-err + self.lmbda_bias * bu)
                 self.bi[i] -= (self.lr_bias * epoch_shrink) * (-err + self.lmbda_bias * bi)
                 self.w -= (self.lr_w * epoch_shrink) * (-err * np.multiply(pu, qi) + self.lmbda_w * w)
-                self.P[u,:] -= (self.lr_latent * epoch_shrink) * (-err * np.multiply(w, qi) + self.lmbda_latent * pu)
-                self.Q[i,:] -= (self.lr_latent * epoch_shrink) * (-err * np.multiply(w, pu) + self.lmbda_latent * qi)
+                self.P[u,:] -= (self.lr_latent * epoch_shrink) * (-err * np.multiply(w, qi) + self.lmbda_p * pu)
+                self.Q[i,:] -= (self.lr_latent * epoch_shrink) * (-err * np.multiply(w, pu) + self.lmbda_q * qi)
             if show_process_rmse:
                 if validate_ratings is None:
                     loss, rmse = self._compute_err(ratings)
@@ -89,7 +90,7 @@ class WSVD(RecBase):
             err_square = (r - self.predict_single_rating(ext_user_id, ext_item_id)) ** 2
             sse += err_square
             loss += err_square
-        loss += self.lmbda_latent * (np.linalg.norm(self.P) + np.linalg.norm(self.Q)) + \
+        loss += self.lmbda_p * np.linalg.norm(self.P) + self.lmbda_q * np.linalg.norm(self.Q) + \
                 self.lmbda_bias * (np.linalg.norm(self.bu) + np.linalg.norm(self.bi)) +\
                 self.lmbda_w * np.linalg.norm(self.w)
         return loss, (sse / len(ratings)) ** .5
