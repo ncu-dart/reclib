@@ -1,6 +1,6 @@
 # Hung-Hsuan Chen <hhchen1105@gmail.com>
 # Creation Date : 09-02-2017
-# Last Modified: Sun 04 Feb 2018 03:50:17 PM CST
+# Last Modified: Thu 08 Feb 2018 03:26:16 PM CST
 
 import collections
 
@@ -18,7 +18,7 @@ class RVSVD(RecBase):
             self, n_users, n_items, n_factors=15, n_epochs=50,
             lr=.005, lr_bias=None, lr_latent=None,
             lmbda=1., lmbda_p=None, lmbda_q=None, lmbda_u=None, lmbda_i=None,
-            lr_shrink_rate=.9, alpha=np.exp(1)):
+            lr_shrink_rate=.9, method="log", alpha=np.exp(1)):
         self.n_users = n_users
         self.n_items = n_items
         self.n_epochs = n_epochs
@@ -40,6 +40,7 @@ class RVSVD(RecBase):
         self.Q = np.random.randn(self.n_items, self.n_factors)
         self.bu = np.zeros(self.n_users)
         self.bi = np.zeros(self.n_items)
+        self.method = method
         self.alpha = alpha
         self.n_user_rating = None
         self.n_item_rating = None
@@ -48,6 +49,7 @@ class RVSVD(RecBase):
         self._external_internal_id_mapping(ratings)
         self.global_mean = self._compute_global_mean(ratings)
         self._compute_n_user_item_rating(ratings)
+
 
         for epoch in range(self.n_epochs):
             epoch_shrink = self.lr_shrink_rate ** epoch
@@ -60,18 +62,32 @@ class RVSVD(RecBase):
                 bi = self.bi[i]
                 pu = self.P[u, :]
                 qi = self.Q[i, :]
+
+                reg_bu = (
+                    self.lmbda_u / np.log(self.n_user_rating[u] + self.alpha)
+                    ) if self.method == "log" else (
+                    self.lmbda_u / (self.n_user_rating[u] + self.alpha))
+                reg_bi = (
+                    self.lmbda_i / np.log(self.n_item_rating[i] + self.alpha)
+                    ) if self.method == "log" else (
+                    self.lmbda_i / (self.n_item_rating[i] + self.alpha))
+                reg_pu = (
+                    self.lmbda_p / np.log(self.n_user_rating[u] + self.alpha)
+                    ) if self.method == "log" else (
+                    self.lmbda_p / (self.n_user_rating[u] + self.alpha))
+                reg_qi = (
+                    self.lmbda_q / np.log(self.n_item_rating[i] + self.alpha)
+                    ) if self.method == "log" else (
+                    self.lmbda_q / (self.n_item_rating[i] + self.alpha))
+
                 self.bu[u] -= (self.lr_bias * epoch_shrink) * (
-                    -err + self.lmbda_u / np.log(
-                        self.n_user_rating[u] + self.alpha) * bu)
+                    -err + reg_bu * bu)
                 self.bi[i] -= (self.lr_bias * epoch_shrink) * (
-                    -err + self.lmbda_i / np.log(
-                        self.n_item_rating[i] + self.alpha) * bi)
+                    -err + reg_bi * bi)
                 self.P[u, :] -= (self.lr_latent * epoch_shrink) * (
-                    -err * qi + self.lmbda_p / np.log(
-                        self.n_user_rating[u] + self.alpha) * pu)
+                    -err * qi + reg_pu * pu)
                 self.Q[i, :] -= (self.lr_latent * epoch_shrink) * (
-                    -err * pu + self.lmbda_q / np.log(
-                        self.n_item_rating[i] + self.alpha) * qi)
+                    -err * pu + reg_qi * qi)
             if show_process_rmse:
                 if validate_ratings is None:
                     loss, rmse = self._compute_err(ratings)
@@ -119,15 +135,15 @@ class RVSVD(RecBase):
         sse = 0.
 
         for (ext_user_id, ext_item_id, r) in ratings:
-            u = self.eu2iu[ext_user_id]
-            i = self.ei2ii[ext_item_id]
+            num_user_rating = self.n_user_rating[ext_user_id] if ext_user_id in self.n_user_rating else 0
+            num_item_rating = self.n_item_rating[ext_item_id] if ext_item_id in self.n_item_rating else 0
             r = float(r)
             err_square = (
                 r - self.predict_single_rating(ext_user_id, ext_item_id)) ** 2
             sse += err_square
             loss += err_square
-        loss += self.lmbda_p / np.log(self.n_user_rating[u] + self.alpha) * np.linalg.norm(self.P) + \
-            self.lmbda_q / np.log(self.n_item_rating[i] + self.alpha) * np.linalg.norm(self.Q) + \
-            self.lmbda_u / np.log(self.n_user_rating[u] + self.alpha) * np.linalg.norm(self.bu) + \
-            self.lmbda_i / np.log(self.n_item_rating[i] + self.alpha) * np.linalg.norm(self.bi)
+        loss += self.lmbda_p / np.log(num_user_rating + self.alpha) * np.linalg.norm(self.P) + \
+            self.lmbda_q / np.log(num_item_rating + self.alpha) * np.linalg.norm(self.Q) + \
+            self.lmbda_u / np.log(num_user_rating + self.alpha) * np.linalg.norm(self.bu) + \
+            self.lmbda_i / np.log(num_item_rating + self.alpha) * np.linalg.norm(self.bi)
         return loss, (sse / len(ratings)) ** .5
